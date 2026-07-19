@@ -1,5 +1,4 @@
 # ---- ENCRIPATADO/ DESECRIPTADO DE PALABRAS ---
-VOCALES = ["a", "e", "i", "o", "u"]
 
 CODIGO_LLAVE = {
     "a" : "ai",
@@ -9,36 +8,15 @@ CODIGO_LLAVE = {
     "u" : "ufat"
 }
 
-def encriptar_letra(letra):
-    #Evalua cada caso de la letra capturada
-    match letra:
-        case "a":
-            return "ai"
-        case "e":
-            return "enter"
-        case "i":
-            return "imes"
-        case "o":
-            return "ober"
-        case "u":
-            return "ufat"        
-        case _:
-            return letra
-
-
 
 def desencriptar_palabra(texto, indice):
-    if texto.startswith(CODIGO_LLAVE.get(texto[indice]), indice) == True:
-        return texto[indice]
-    else:
-        return texto[indice]
 
+    palabra_cod_llave = CODIGO_LLAVE.get(texto[indice])
 
-def saltos_desencriptados(texto, indice):
-    if texto.startswith(CODIGO_LLAVE.get(texto[indice]), indice) == True:
-        return len(CODIGO_LLAVE.get(texto[indice]))
+    if texto.startswith(palabra_cod_llave , indice) == True:
+        return texto[indice], len(palabra_cod_llave )
     else:
-        return 1
+        return texto[indice], 1
 
 
 def desencriptar(texto):
@@ -49,8 +27,9 @@ def desencriptar(texto):
     while i < len(texto): # len(texto) = 8
 
         if texto[i] in CODIGO_LLAVE:
-            texto_desencriptado.append(desencriptar_palabra(texto, i))
-            i+= saltos_desencriptados(texto, i)
+            text, cant_saltos = desencriptar_palabra(texto, i)
+            texto_desencriptado.append(text)
+            i+= cant_saltos
         else:
             texto_desencriptado.append(texto[i])
             i+=1
@@ -64,9 +43,8 @@ def encriptar(txt):
     texto_encriptado = []
 
     for t in txt:
-        if t in VOCALES: 
-            letra_encriptada = encriptar_letra(t)
-            texto_encriptado.append(letra_encriptada)
+        if t in CODIGO_LLAVE: 
+            texto_encriptado.append(CODIGO_LLAVE.get(t))
         else:
             texto_encriptado.append(t)
 
@@ -82,24 +60,24 @@ def encriptar_txt():
 
 def desencriptar_txt():
     #Esta funcion desencripta el texto que el usuario coloca
-    texto = input("Dime el texto a encriptar").lower()
+    texto = input("Dime el texto a desencriptar").lower()
     print(desencriptar(texto))
     
 
 
 while True:
-    opcion = int(input("Elige la opcion: 1- Encriptar | 2- Desencriptar | 3- Salir"))
-
-    if opcion == 3:
-        print("Saliendo de la app....")
-        break
 
     try:
+        opcion = int(input("Elige la opcion: 1- Encriptar | 2- Desencriptar | 3- Salir"))
+
+        if opcion == 3:
+            print("Saliendo de la app....")
+            break
+        
         if opcion == 1:
             encriptar_txt()
         elif opcion == 2:
             desencriptar_txt()
+            
     except ValueError:
         print("Error de opcion, vuelva a intentar")
-        continue
-
